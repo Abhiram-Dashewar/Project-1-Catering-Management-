@@ -1,0 +1,354 @@
+{% extends "basepage.html" %}
+{% block content %}
+
+<!--Dashboard Section-->
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="section-title" id="userName">Welcome, {{name}} !</h2>
+                <p>You are now logged in. Browse menu and add items to your cart.</p>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#profileModal">Profile</a>
+                    <a href="#menu" class="btn btn-success">Browse Menu</a>
+                    <a href="#cartItems" class="btn btn-primary">View Cart</a>
+                    <a href="#yourOrders" class="btn btn-info">View my Orders</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Profile Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content p-4">
+            <h5 class="modal-title mb-3">Your Profile</h5>
+            <form id="loginForm" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Name</label>
+                    <div class="form-control" id="profileName">{{name}}</div>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="form-control" id="profileEmail">{{email}}</div>
+                </div>
+                <a href="{{url_for('home')}}" class="btn btn-primary w-100">Logout</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Checkout Modal -->
+<div class="modal fade" id="checkoutModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content p-4">
+            <h5 class="modal-title mb-3">Checkout</h5>
+            <form id="checkoutForm" class="needs-validation">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="checkoutName" class="form-label">Full Name</label>
+                        <div class="form-control">{{name}}</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="checkoutEmail" class="form-label">Email Address</label>
+                        <div class="form-control">{{email}}</div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label for="checkoutAddress" class="form-label">Delivery Address</label>
+                        <textarea class="form-control" id="checkoutAddress" rows="2" required></textarea>
+                        <div class="invalid-feedback">Please provide a delivery address.</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="checkoutPhone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="checkoutPhone" required>
+                        <div class="invalid-feedback">Please provide a phone number.</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="checkoutDate" class="form-label">Delivery Date</label>
+                        <input type="date" class="form-control" id="checkoutDate" required>
+                        <div class="invalid-feedback">Please select a delivery date.</div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between fw-bold mb-3">
+                    <h5 id="orderTotal">Order Total : ₹ 0.00</h5>
+                </div>
+                <button id="placeorderBtn" type="submit" class="btn btn-primary w-100">Place Order</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Menu Items -->
+<section id="menu" class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Our Menu</h2>
+            <p>Explore our selection of culinary delights crafted with the finest ingredients.</p>
+        </div>
+
+        <div class="row">
+            {% for product in products %}
+            <div class="col-6 col-lg-3 mb-4 dish-card">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ product.image }}" alt="{{ product.name }}" class="card-img-top"
+                        style="height: 180px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title item-name">{{ product.name }}</h5>
+                        <p class="card-text text-muted small">{{ product.description }}</p>
+                        <p class="fw-bold mt-2 item-price">₹ {{ product.price }}</p>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button class="btn btn-primary btn-sm mb-4 add-to-cart">Add to cart</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Cart Section -->
+<section id="cartItems" class="section-padding">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="section-title">Your Cart</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        <!-- Cart items will appear here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <h5 class="text-start" id="grandTotal">Grand Total: ₹ 0.00</h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <button id="checkoutBtn" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#checkoutModal">Check Out</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p id="emptyCartText" class="mt-3">Your cart is empty.</p>
+        </div>
+    </div>
+</section>
+
+<!--Orders section-->
+<section id="yourOrders" class="section-padding">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-log-8 mx-auto">
+                <h2 class="section-title">Your Orders</h2>
+                <p>Here are your Orders</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Order ID</th>
+                            <th>Phone</th>
+                            <th>Delivery Address</th>
+                            <th>Date of Delivery</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if orders %}
+                        {% for order in orders|reverse%}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ order[0] }}</td>
+                            <td>{{ order[1] }}</td>
+                            <td>{{ order[2] }}</td>
+                            <td>{{ order[3] }}</td>
+                            <td>₹ {{ order[4] }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="6">No orders yet.</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const addButtons = document.querySelectorAll(".add-to-cart");
+        const cartBody = document.getElementById("tbody");
+        const grandTotalEl = document.getElementById("grandTotal");
+        const emptyCartText = document.getElementById("emptyCartText");
+        const checkoutBtn = document.getElementById("checkoutBtn");
+        const orderTotalEl = document.getElementById("orderTotal");
+        let grandTotal = 0;
+
+        addButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const card = button.closest(".card");
+                const name = card.querySelector(".item-name").textContent;
+                const priceText = card.querySelector(".item-price").textContent;
+                const price = parseFloat(priceText.replace("₹", "").trim());
+
+                // Check if item already exists in cart
+                const existingRow = Array.from(cartBody.children).find(row =>
+                    row.querySelector("td") && row.querySelector("td").textContent === name
+                );
+
+                if (existingRow) {
+                    // Increase quantity
+                    const qtyCell = existingRow.querySelector("td:nth-child(2)");
+                    const totalCell = existingRow.querySelector("td:nth-child(4)");
+                    let qty = parseInt(qtyCell.textContent);
+                    qty++;
+                    qtyCell.textContent = qty;
+                    totalCell.textContent = "₹ " + (qty * price).toFixed(2);
+                } else {
+                    // Add new item row
+                    const newRow = document.createElement("tr");
+                    newRow.innerHTML = `
+                    <td>${name}</td>
+                    <td>1</td>
+                    <td>₹ ${price.toFixed(2)}</td>
+                    <td>₹ ${price.toFixed(2)}</td>
+                    <td><button class="btn btn-secondary btn-sm" id="removeBtn">Remove</button></td>
+                `;
+                    cartBody.appendChild(newRow);
+                }
+
+                updateGrandTotal();
+            });
+        });
+
+        function updateGrandTotal() {
+            const rows = cartBody.querySelectorAll("tr");
+            grandTotal = 0;
+            rows.forEach(row => {
+                const totalCell = row.querySelector("td:nth-child(4)");
+                if (totalCell) {
+                    const total = parseFloat(totalCell.textContent.replace("₹", "").trim());
+                    grandTotal += total;
+                }
+            });
+            grandTotalEl.textContent = "Grand Total: ₹ " + grandTotal.toFixed(2);
+
+            // Hide or show empty text
+            emptyCartText.style.display = grandTotal > 0 ? "none" : "block";
+        }
+
+        // --- Remove item from cart ---
+        cartBody.addEventListener("click", function (event) {
+            if (event.target && event.target.id === "removeBtn") {
+                const row = event.target.closest("tr");
+                row.remove(); // remove that specific row
+                updateGrandTotal(); // recalculate total
+            }
+        });
+
+        checkoutBtn.addEventListener("click", function () {
+            orderTotalEl.textContent = "Order Total : ₹ " + grandTotal.toFixed(2);
+        });
+
+        // Hide navigation links
+        const navAnchors = document.querySelectorAll('nav ul li a');
+        navAnchors.forEach(anchor => {
+            anchor.style.display = 'none';
+        });
+
+        const checkoutForm = document.getElementById("checkoutForm");
+        const orderTotalEle = document.getElementById("orderTotal");
+
+        checkoutForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const name = "{{ name }}";
+            const email = "{{ email }}";
+            const address = document.getElementById("checkoutAddress").value.trim();
+            const phone = document.getElementById("checkoutPhone").value.trim();
+            const dateInput = document.getElementById("checkoutDate").value;
+            const orderTotal = orderTotalEle.textContent.replace("Order Total : ₹", "").trim();
+            const orderId = Math.floor(10000000 + Math.random() * 90000000);
+
+            // --- Basic validation ---
+            if (!address || !phone || !dateInput) {
+                alert("Please fill out all required fields before placing your order.");
+                return;
+            }
+
+            // --- Validate delivery date ---
+            const today = new Date();
+            const selectedDate = new Date(dateInput);
+            today.setHours(0, 0, 0, 0);
+            selectedDate.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                alert("Please select a valid delivery date (today or in the future).");
+                return;
+            }
+
+            // Send order data to Flask backend
+            fetch("/save_order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    order_id: orderId,
+                    email: email,
+                    phone: phone,
+                    address: address,
+                    date: dateInput,
+                    total: orderTotal
+                })
+            })
+            .then(res => res.text())
+            .then(() => {
+                alert(
+                    `✅ Order placed successfully! Details\n` +
+                    `Name: ${name}\n` +
+                    `Email: ${email}\n` +
+                    `Address: ${address}\n` +
+                    `Phone: ${phone}\n` +
+                    `Delivery Date: ${dateInput}\n` +
+                    `Order Total: ₹${orderTotal}\n` +
+                    `Order ID: ${orderId}`
+                );
+
+                // Clear cart in backend
+                return fetch("/clear_cart", { method: "POST" });
+            })
+            .then(() => {
+                // Reset form, hide modal, and refresh page
+                checkoutForm.reset();
+                const checkoutModal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
+                checkoutModal.hide();
+                location.reload();
+            })
+            .catch(err => console.error("Error placing order:", err));
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends "basepage.html" %}
+{% block content %}
+
+<!--Dashboard link -->
+<section class="section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <h2 class="section-title">Welcome Back!</h2>
+        <div class="d-flex gap-2 flex-wrap">
+          <a href="#userDashboard" class="btn btn-primary">Dashboard</a>
+          <a href="#menuSection" class="btn btn-success">View menu</a>
+          <a href="#ordersSection" class="btn btn-info">View Orders</a>
+          <a href="{{ url_for('logout') }}" class="btn btn-primary">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--https://images.unsplash.com/photo-1600891964599-f61ba0e24092-->
+<!--Dashboard section-->
+<section id="userDashboard" class="section-padding">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-lg-8 mx-auto">
+        <h2 class="section-title">User Dashboard</h2>
+        <p>Fill out the form below to add menu items on the home page.</p>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="booking-form">
+          <form method="POST" action="{{url_for('add')}}">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="item name" class="form-label">Item name</label>
+                <input type="text" name="name" placeholder="Name" class="form-control" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="item description" class="form-label">Item Description</label>
+                <input type="text" name="description" placeholder="Description" class="form-control" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="item price" class="form-label">Item Price</label>
+                <input type="text" name="price" placeholder="Price in INR" class="form-control" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="item image" class="form-label">Item Image URL</label>
+                <input type="text" name="image" placeholder="Image URL" class="form-control" required>
+              </div>
+              <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary btn-sm">Add Item</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--Menu Items-->
+<section id="menuSection" class="section-padding">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-lg-8 mx-auto">
+        <h2 class="section-title">Menu items</h2>
+        <p>You can edit and delete your menu items from here which will render on home page.</p>
+      </div>
+    </div>
+    <!-- Products List -->
+    <ul class="space-y-4">
+      {% for product in products %}
+      <li class="bg-gray-100 p-4 rounded flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          <strong>{{ product.name }}</strong> - ₹{{ product.price }} <br>
+          <small>{{ product.description }}</small>
+        </div>
+        <div class="flex space-x-2">
+          <!-- Edit Form -->
+          <form method="POST" action="{{ url_for('edit', id=product.id) }}"
+            class="flex flex-col md:flex-row gap-2 items-center">
+            <input type="text" name="name" value="{{ product.name }}" class="border px-2 py-1 rounded w-full md:w-32">
+            <input type="text" name="description" value="{{ product.description }}"
+              class="border px-2 py-1 rounded w-full md:w-48">
+            <input type="text" name="price" value="{{ product.price }}" class="border px-2 py-1 rounded w-full md:w-24">
+            <input type="text" name="image" value="{{ product.image }}" class="border px-2 py-1 rounded w-full md:w-40">
+            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+            <a href="{{ url_for('delete', id=product.id) }}" class="btn btn-primary btn-sm">Delete</a>
+          </form>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<!--Orders section-->
+<section id="ordersSection" class="section-padding">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-lg-8 mx-auto">
+        <h2 class="section-title">Orders</h2>
+        <p>You can view the orders that your get here.</p>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Email</th>
+              <th>Order ID</th>
+              <th>Phone</th>
+              <th>Delivery Address</th>
+              <th>Date of Delivery</th>
+              <th>Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if orders %}
+            {% for order in orders|reverse %}
+            <tr>
+              <td>{{ loop.index }}</td> <!-- Serial Number starting from 1 -->
+              <td>{{ order[0] }}</td> <!-- Email -->
+              <td>{{ order[1] }}</td> <!-- Order ID -->
+              <td>{{ order[2] }}</td> <!-- Phone -->
+              <td>{{ order[3] }}</td> <!-- Address -->
+              <td>{{ order[4] }}</td> <!-- Delivery Date -->
+              <td>₹ {{ order[5] }}</td> <!-- Total Price -->
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+              <td colspan="7">No orders yet.</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="col-12 text-center">
+  <a href="{{ url_for('logout') }}" class="btn btn-primary btn-sm mb-3">Logout</a>
+</div>
+
+<script>
+  const navAnchors = document.querySelectorAll('nav ul li a');
+  navAnchors.forEach(anchor => {
+    anchor.style.display = 'none';
+  });
+</script>
+
+{% endblock %}
