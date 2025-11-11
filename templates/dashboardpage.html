@@ -11,6 +11,7 @@
           <a href="#userDashboard" class="btn btn-primary">Dashboard</a>
           <a href="#menuSection" class="btn btn-success">View menu</a>
           <a href="#ordersSection" class="btn btn-info">View Orders</a>
+          <a href="#bookingsSection" class="btn btn-success">View Booking Requests</a>
           <a href="{{ url_for('logout') }}" class="btn btn-primary">Logout</a>
         </div>
       </div>
@@ -133,6 +134,56 @@
             {% else %}
             <tr>
               <td colspan="7">No orders yet.</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--Bookings section-->
+<section id="bookingsSection" class="section-padding">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-lg-8 mx-auto">
+        <h2 class="section-title">Booking Requests</h2>
+        <p>You can view the booking requests that you get here.</p>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-bordered text-center">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Event Type</th>
+              <th>Event Date</th>
+              <th>Guests</th>
+              <th>Message</th>
+              <th>Submitted At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if bookings %}
+            {% for booking in bookings %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ booking[1] }}</td>
+              <td>{{ booking[2] }}</td>
+              <td>{{ booking[3] }}</td>
+              <td>{{ booking[4] }}</td>
+              <td>{{ booking[5] }}</td>
+              <td>{{ booking[6] }}</td>
+              <td>{{ booking[7] }}</td>
+              <td>{{ booking[8] }}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+              <td colspan="9">No booking requests yet.</td>
             </tr>
             {% endif %}
           </tbody>

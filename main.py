@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, session, g, flash
+from flask import Flask, render_template, request, redirect, url_for, session, g, flash, jsonify
 import sqlite3
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
@@ -62,6 +63,25 @@ def init_orders_table():
             address TEXT,
             delivery_date TEXT,
             total_price REAL
+        )
+    """)
+    conn.commit()
+    conn.close()
+    
+def init_bookings_table():
+    conn = sqlite3.connect("userdata.db")
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS bookings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            full_name TEXT,
+            email TEXT,
+            phone TEXT,
+            event_type TEXT,
+            event_date TEXT,
+            guests INTEGER,
+            message TEXT,
+            submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     """)
     conn.commit()
@@ -175,7 +195,7 @@ def dashboard():
         return redirect(url_for("home"))
     db = get_db()
     products = db.execute("SELECT * FROM products").fetchall()
-    
+
     # Get all orders
     conn = sqlite3.connect("userdata.db")
     c = conn.cursor()
@@ -185,8 +205,13 @@ def dashboard():
         ORDER BY id DESC
     """)
     all_orders = c.fetchall()
+
+    # Get all bookings
+    c.execute("SELECT * FROM bookings ORDER BY submitted_at DESC")
+    all_bookings = c.fetchall()
     conn.close()
-    return render_template("dashboardpage.html", products=products, orders=all_orders)
+
+    return render_template("dashboardpage.html", products=products, orders=all_orders, bookings=all_bookings)
 
 #-- User Dashboard ---
 def userdashboard():
@@ -247,12 +272,31 @@ def clear_cart():
         session["cart"] = []  # clear the cart list
     return "Cart cleared"
 
-# @app.route("/contact", methods=["POST"])
-# def contact():
-#     name = request.form["name"]
-#     phone = request.form["phone"]
+@app.route("/submit_booking", methods=["POST"])
+def submit_booking():
+    full_name = request.form.get("name")
+    email = request.form.get("email")
+    phone = request.form.get("phone")
+    event_type = request.form.get("eventType")
+    event_date = request.form.get("eventDate")
+    guests = request.form.get("guests")
+    message = request.form.get("message")
+
+    conn = sqlite3.connect("userdata.db")
+    c = conn.cursor()
+    c.execute("""
+        INSERT INTO bookings (full_name, email, phone, event_type, event_date, guests, message)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (full_name, email, phone, event_type, event_date, guests, message))
+    conn.commit()
+    conn.close()
+
+    # You can redirect to the same page or show a success message
+    return redirect(url_for('home', _anchor='booking'))
 
 
 if __name__ == "__main__":
     init_db()
+    init_orders_table()
+    init_bookings_table()   # Add this line
     app.run(debug=True, port=4000)

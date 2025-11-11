@@ -132,26 +132,27 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="booking-form">
-                    <form id="cateringForm" class="needs-validation">
+                    <form method="POST" action="{{url_for('submit_booking')}}" id="cateringForm"
+                        class="needs-validation">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="name" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="name" required>
+                                <input type="text" class="form-control" id="name" name="name" required>
                                 <div class="invalid-feedback">Please provide your full name.</div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" required>
+                                <input type="email" class="form-control" id="email" name="email" required>
                                 <div class="invalid-feedback">Please provide a valid email.</div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="phone" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="phone" required>
+                                <input type="tel" class="form-control" id="phone" name="phone" required>
                                 <div class="invalid-feedback">Please provide a phone number.</div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="eventType" class="form-label">Event Type</label>
-                                <select class="form-select" id="eventType" required>
+                                <select class="form-select" id="eventType" name="event_type" required>
                                     <option value="">Select Event Type</option>
                                     <option value="corporate">Corporate Event</option>
                                     <option value="wedding">Wedding</option>
@@ -163,17 +164,17 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="eventDate" class="form-label">Event Date</label>
-                                <input type="date" class="form-control" id="eventDate" required>
+                                <input type="date" class="form-control" id="eventDate" name="event_date" required>
                                 <div class="invalid-feedback">Please select an event date.</div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="guests" class="form-label">Number of Guests</label>
-                                <input type="number" class="form-control" id="guests" min="1" required>
+                                <input type="number" class="form-control" id="guests" name="guests" min="1" required>
                                 <div class="invalid-feedback">Please provide the number of guests.</div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="message" class="form-label">Additional Information</label>
-                                <textarea class="form-control" id="message" rows="4"></textarea>
+                                <label for="message" class="form-label">Address</label>
+                                <textarea class="form-control" id="message" name="message" rows="4"></textarea>
                             </div>
                             <div class="col-12 text-center">
                                 <button type="submit" class="btn btn-primary btn-lg">Submit Request</button>
@@ -312,10 +313,12 @@
 
     const addtocartBtn = document.querySelectorAll(".add-to-cart");
     addtocartBtn.forEach(button => {
-        button.addEventListener("click", ()=> {
+        button.addEventListener("click", () => {
             alert("Signup requried to add items in cart!.")
         })
     })
+
+
 
 </script>
 
