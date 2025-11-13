@@ -24,6 +24,9 @@ It’s designed to make operations smoother for both administrators and customer
 - Track payments and generate reports.
 - Manage customer feedback and service requests.
 
+## Live Site
+- [Catering Management](https://project-1-catering-management-6.onrender.com/)
+
 ---
 
 ## 🛠️ Tech Stack
@@ -46,3 +49,4 @@ Follow these steps to run the project locally:
    ```bash
    git clone https://github.com/Abhiram-Dashewar/Project-1-Catering-Management-.git
    cd Project-1-Catering-Management-
+   python main.py
