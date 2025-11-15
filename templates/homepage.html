@@ -177,7 +177,8 @@
                                 <textarea class="form-control" id="message" name="message" rows="4"></textarea>
                             </div>
                             <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-primary btn-lg">Submit Request</button>
+                                <button type="submit" class="btn btn-primary btn-lg" id="submitButton">Submit
+                                    Request</button>
                             </div>
                         </div>
                     </form>
@@ -316,8 +317,22 @@
         button.addEventListener("click", () => {
             alert("Signup requried to add items in cart!.")
         })
-    })
+    });
 
+    const name = document.getElementById("name");
+    const email = document.getElementById("email");
+    const phoneNo = document.getElementById("phone");
+    const eventType = document.getElementById("eventType");
+    const eventDate = document.getElementById("eventDate");
+    const guests = document.getElementById("guests");
+    const address = document.getElementById("message");
+
+    const submitButton = document.getElementById("submitBtn");
+    submitButton.addEventListener("click", () => {
+        if (name != NULL || email != NULL || phoneNo != NULL || eventType != NULL || eventDate != NULL || guests != NULL || address != NULL) {
+            alert("Your order was booked!. We will soon be in touch with you!");
+        }
+    })
 
 
 </script>
