@@ -294,6 +294,14 @@ def submit_booking():
     # You can redirect to the same page or show a success message
     return redirect(url_for('home', _anchor='booking'))
 
+@app.template_filter("to_ist")
+def to_ist(utc_dt):
+    if not utc_dt:
+        return ""
+    utc_dt = datetime.strptime(utc_dt, "%Y-%m-%d %H:%M:%S")
+    utc_dt = utc_dt.replace(tzinfo=pytz.UTC)
+    ist = utc_dt.astimezone(pytz.timezone("Asia/Kolkata"))
+    return ist.strftime("%Y-%m-%d %H:%M:%S")
 
 if __name__ == "__main__":
     init_db()
