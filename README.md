@@ -27,6 +27,10 @@ It’s designed to make operations smoother for both administrators and customer
 ## Live Site
 - [Catering Management](https://project-1-catering-management-6.onrender.com/)
 
+## Demo credentials for Admin Login
+- Username : abhidashewar@gmail.com
+- Password : password
+
 ---
 
 ## 🛠️ Tech Stack
