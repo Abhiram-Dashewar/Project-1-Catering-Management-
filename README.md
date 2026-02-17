@@ -54,3 +54,5 @@ Follow these steps to run the project locally:
    git clone https://github.com/Abhiram-Dashewar/Project-1-Catering-Management-.git
    cd Project-1-Catering-Management-
    python main.py
+
+![Alt text](https://ashutoshtripathi.com/wp-content/uploads/2021/04/image.png?w=960)
